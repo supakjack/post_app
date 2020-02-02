@@ -1,10 +1,10 @@
 <?php
-
 defined('BASEPATH') or exit('No direct script access allowed');
+require APPPATH . 'models/interfaces/App_model_interface.php';
+require APPPATH . 'models/App_model.php';
 
-class Da_posts extends CI_Model
+class Da_posts extends App_model implements App_model_interface
 {
-
     public $pot_id;
     public $pot_stamp;
     public $pot_post;
@@ -17,28 +17,33 @@ class Da_posts extends CI_Model
 
     public function insert()
     {
-        $query = $this->db->insert('posts', $this->pot_post);
+        $this->db->set('pot_post', $this->pot_post);
+        $query = $this->db->insert('posts');
         return $query;
-
     }
 
     public function delete()
     {
-        $this->db->where('id', $this->pot_id);
+        $this->db->where('pot_id', $this->pot_id);
         $query =  $this->db->delete('posts');
         return $query;
-
     }
 
     public function update()
     {
-        $query = $this->db->replace('posts', $this);
+        $this->db->set('pot_post', $this->pot_post);
+        $this->db->set('pot_stamp', $this->pot_stamp);
+        $this->db->set('pot_report', $this->pot_report);
+        $this->db->where('pot_id', $this->pot_id);
+        $query = $this->db->update('posts');
         return $query;
-
     }
 
     public function select()
     {
+        if ($this->pot_id) {
+            $this->db->where('pot_id', $this->pot_id);
+        }
         $query = $this->db->get('posts');
         return $query;
     }

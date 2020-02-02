@@ -3,23 +3,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class App_controller extends CI_Controller
 {
-	public function __construct()
+	public $controller_route;
+	public $model;
+	public $view;
+	public $file_config;
+
+	public function __construct($file_config)
 	{
 		parent::__construct();
+		$this->config->load($file_config);
+		$this->controller_route = $this->config->item('controller');
+		$this->model = $this->config->item('model');
+		$this->view = $this->config->item('view');
 	}
 
-	public function output($view, $data = null, $return = false)
+	public function builder_director($director)
 	{
-		if (!$return) {
-			$this->load->view('templates/header', $data, $return);
-			$this->load->view($view, $data, $return);
-			$this->load->view('templates/footer', $data, $return);
-		} else {
-			$txt = '';
-			$txt .= $this->load->view('templates/header', $data, $return);
-			$txt .= $this->load->view($view, $data, $return);
-			$txt .= $this->load->view('templates/footer', $data, $return);
-			return $txt;
-		}
+		return $director;
 	}
 }
